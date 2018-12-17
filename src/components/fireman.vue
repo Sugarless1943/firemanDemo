@@ -86,177 +86,209 @@
 
         times: [],
 
+        qibaoData: {
+          'PT_1201A': [],
+          'PT_1201B': []
+        },
+
+        chukouData: {
+          'PT_3001': [],
+          'PT_3002': []
+        },
+
         qushiObj: {}
       }
     },
 
     methods: {
       qibaoyali() {
-        var myChart = echarts.init(document.getElementById('qibaoyali'));
+        const self = this
+        if(self.qibaoData['PT_1201A'].length > 0){
+          let shishiData = []
+          for(let i=0;i<self.qibaoData['PT_1201A'].length;i++){
+            shishiData.push(self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2
+          }
 
-        // 指定图表的配置项和数据
-        var option = {
-          color: ['#D53A35', '#E98F6F'],
-          title: {
-            text: '汽包压力',
-            x: 'center'
-          },
-          tooltip: {
-            trigger: 'axis',
-            //formatter: "{b} <br> 合格率: {c}%"
-          },
-          legend: {
-            data: ['旅游运输', '班线运输'],
-            x: 'center',
-            y: 'bottom'
-          },
-          grid: {
-            left: '5%',
-            right: '5%',
-            top: '10%',
-            bottom: '5%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'category',
-            name: '日期',
-            boundaryGap: false,
-            data: ['5.1', '5.2', '5.3', '5.4', '5.5', '5.6', '5.7']
-          },
-          yAxis: {
-            type: 'value',
-            name: '报警次数',
-          },
-          series: [{
-            name: '旅游运输',
-            type: 'line',
-            data: [120, 132, 101, 134, 90]
-          },
-            {
-              name: '班线运输',
+
+          var myChart = echarts.init(document.getElementById('qibaoyali'));
+          // 指定图表的配置项和数据
+          var option = {
+            color: ['#157DE2', '#50E3C2'],
+            title: {
+              text: '汽包压力',
+              x: 'center'
+            },
+            tooltip: {
+              trigger: 'axis',
+              //formatter: "{b} <br> 合格率: {c}%"
+            },
+            legend: {
+              data: ['实时值', '预测值'],
+              x: 'center',
+              y: 'bottom'
+            },
+            grid: {
+              left: '5%',
+              right: '5%',
+              top: '10%',
+              bottom: '5%',
+              containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              name: '时间',
+              boundaryGap: false,
+              data: self.times
+            },
+            yAxis: {
+              type: 'value',
+              name: 'MPa',
+            },
+            series: [{
+              name: '实时值',
               type: 'line',
-              lineStyle:{
-                normal:{type:'dashed'}
-              },
-              data: [130, 155, 55, 124, 70, 70, 230, 210]
-            }
-          ]
-        };
+              data: shishiData
+            },
+              // {
+              //   name: '预测值',
+              //   type: 'line',
+              //   lineStyle:{
+              //     normal:{type:'dashed'}
+              //   },
+              //   data: [130, 155, 55, 124, 70, 70, 230, 210]
+              // }
+            ]
+          };
+          // 使用刚指定的配置项和数据显示图表。
+          myChart.setOption(option);
+        }
 
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
+
+
+
+
       },
 
       chukouyali() {
-        var myChart = echarts.init(document.getElementById('chukouyali'));
+        const self = this
+        if(self.chukouData['PT_3001'].length > 0){
+          let shishiData = []
+          for(let i=0;i<self.chukouData['PT_3001'].length;i++){
+            shishiData.push(self.chukouData['PT_3001'][i] + self.chukouData['PT_3002'][i]) / 2
+          }
 
-        // 指定图表的配置项和数据
-        var option = {
-          color: ['#D53A35', '#E98F6F'],
-          title: {
-            text: '出口压力',
-            x: 'center'
-          },
-          tooltip: {
-            trigger: 'axis',
-            //formatter: "{b} <br> 合格率: {c}%"
-          },
-          legend: {
-            data: ['旅游运输', '班线运输'],
-            x: 'center',
-            y: 'bottom'
-          },
-          grid: {
-            left: '5%',
-            right: '5%',
-            top: '10%',
-            bottom: '5%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'category',
-            name: '日期',
-            boundaryGap: false,
-            data: ['5.1', '5.2', '5.3', '5.4', '5.5', '5.6', '5.7']
-          },
-          yAxis: {
-            type: 'value',
-            name: '报警次数',
-          },
-          series: [{
-            name: '旅游运输',
-            type: 'line',
-            data: [120, 132, 101, 134, 90]
-          },
-            {
-              name: '班线运输',
+          var myChart = echarts.init(document.getElementById('chukouyali'));
+          // 指定图表的配置项和数据
+          var option = {
+            color: ['#157DE2', '#50E3C2'],
+            title: {
+              text: '出口压力',
+              x: 'center'
+            },
+            tooltip: {
+              trigger: 'axis',
+              //formatter: "{b} <br> 合格率: {c}%"
+            },
+            legend: {
+              data: ['实时值', '预测值'],
+              x: 'center',
+              y: 'bottom'
+            },
+            grid: {
+              left: '5%',
+              right: '5%',
+              top: '10%',
+              bottom: '5%',
+              containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              name: '时间',
+              boundaryGap: false,
+              data: self.times || []
+            },
+            yAxis: {
+              type: 'value',
+              name: 'MPa',
+            },
+            series: [{
+              name: '实时值',
               type: 'line',
-              lineStyle:{
-                normal:{type:'dashed'}
-              },
-              data: [120, 132, 101, 134, 90, 70, 230, 210]
-            }
-          ]
-        };
+              data: shishiData || []
+            },
+              // {
+              //   name: '预测值',
+              //   type: 'line',
+              //   lineStyle:{
+              //     normal:{type:'dashed'}
+              //   },
+              //   data: [120, 132, 101, 134, 90, 70, 230, 210]
+              // }
+            ]
+          };
+          // 使用刚指定的配置项和数据显示图表。
+          myChart.setOption(option);
+        }
 
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
+
+
       },
 
       qushi() {
         const self = this
-        let legends = []
-        let series = []
-        for(let i in self.qushiObj) {
-          legends.push(i)
+        if(Object.keys(self.qushiObj).length > 0){
+          let legends = []
+          let series = []
+          for(let i in self.qushiObj) {
+            legends.push(i)
 
-          series.push({
-            name: i,
-            type: 'line',
-            data: self.qushiObj[i]
-          })
+            series.push({
+              name: i,
+              type: 'line',
+              data: self.qushiObj[i]
+            })
+          }
+
+          var myChart = echarts.init(document.getElementById('qushi'));
+          var option = {
+            // color: ['#D53A35', '#E98F6F', '#6AB0B8', '#334B5C'],
+            title: {
+              text: '消费趋势',
+              x: 'center'
+            },
+            tooltip: {
+              trigger: 'axis',
+              //formatter: "{b} <br> 合格率: {c}%"
+            },
+            legend: {
+              data: legends || [],
+              x: 'center',
+              y: 'bottom'
+            },
+            grid: {
+              left: '5%',
+              right: '5%',
+              top: '12%',
+              bottom: '12%',
+              containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              name: '时间',
+              boundaryGap: false,
+              data: self.times || []
+            },
+            yAxis: {
+              type: 'value',
+              name: 't/h',
+            },
+            series: series || []
+          };
+          // 使用刚指定的配置项和数据显示图表。
+          myChart.setOption(option);
         }
 
-        console.log(series)
 
-
-        var myChart = echarts.init(document.getElementById('qushi'));
-        var option = {
-          // color: ['#D53A35', '#E98F6F', '#6AB0B8', '#334B5C'],
-          title: {
-            text: '消费趋势',
-            x: 'center'
-          },
-          tooltip: {
-            trigger: 'axis',
-            //formatter: "{b} <br> 合格率: {c}%"
-          },
-          legend: {
-            data: legends,
-            x: 'center',
-            y: 'bottom'
-          },
-          grid: {
-            left: '5%',
-            right: '5%',
-            top: '12%',
-            bottom: '12%',
-            containLabel: true
-          },
-          xAxis: {
-            type: 'category',
-            name: '时间',
-            boundaryGap: false,
-            data: self.times
-          },
-          yAxis: {
-            type: 'value',
-            name: '%',
-          },
-          series: series
-        };
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
       },
 
       init() {
@@ -1377,8 +1409,26 @@
             //处理时间
             self.times.push(moment(item._id - 0).format('HH:mm'))
 
-            //消费趋势分组
+
             for(let i in item._source) {
+              //汽包压力
+              if(i == 'PT_1201A'){
+                self.qibaoData['PT_1201A'].push(item._source[i])
+              }
+              if(i == 'PT_1201B'){
+                self.qibaoData['PT_1201B'].push(item._source[i])
+              }
+
+              //出口压力
+              if(i == 'PT_3001'){
+                self.chukouData['PT_3001'].push(item._source[i])
+              }
+              if(i == 'PT_3002'){
+                self.chukouData['PT_3002'].push(item._source[i])
+              }
+
+
+              //消费趋势分组
               if(i.includes('flow_')){
                 let name = i.split('_').pop()
                 if(!self.qushiObj[name]) {
@@ -1390,7 +1440,8 @@
             }
           })
 
-          this.init()
+      console.log(self.chukouData)
+      self.init()
     },
 
 
