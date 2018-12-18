@@ -143,7 +143,7 @@
               type: 'value',
               name: 'MPa',
               min: 1,
-              max: 2.5
+              max: 3
             },
             series: [{
               name: '实时值',
