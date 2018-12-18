@@ -109,7 +109,6 @@
             shishiData.push(self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2
           }
 
-
           var myChart = echarts.init(document.getElementById('qibaoyali'));
           // 指定图表的配置项和数据
           var option = {
@@ -288,15 +287,22 @@
 
       realtimeServer() {
         const self = this
+
         fetch("/dataall",{
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
-            const data = json.hits.hits
-            data.forEach((item,index) => {
+            const data = json.hits.hits.sort((a,b) => Number(a._id) - Number(b._id))
+            self.times = []
+            self.qibaoData['PT_1201A'] = []
+            self.qibaoData['PT_1201B'] = []
+            self.chukouData['PT_3001'] = []
+            self.chukouData['PT_3002'] = []
+            self.qushiObj = {}
+
+            data.forEach(item => {
               //处理时间
               self.times.push(moment(item._id - 0).format('HH:mm'))
-
 
               for(let i in item._source) {
                 //汽包压力
@@ -314,7 +320,6 @@
                 if(i == 'PT_3002'){
                   self.chukouData['PT_3002'].push(item._source[i])
                 }
-
 
                 //消费趋势分组
                 if(i.includes('flow_')){
@@ -363,9 +368,12 @@
       this.nowServer()
     },
 
-
     mounted() {
-      this.init()
+      setInterval(() => {
+        this.realtimeServer()
+        this.nowServer()
+        this.init()
+      },10000)
     },
 
 }
