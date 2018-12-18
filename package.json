@@ -14,8 +14,6 @@
   },
   "dependencies": {
     "as-ui": "^2.0.215",
-    "as-utils": "^1.0.287",
-    "as-vis-container": "^2.1.0-249",
     "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.4.11",
     "moment": "^2.23.0",
@@ -23,7 +21,6 @@
     "sass": "^1.15.2",
     "sass-loader": "^7.1.0",
     "vue": "^2.5.2",
-    "vue-mqtt": "^2.0.3",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

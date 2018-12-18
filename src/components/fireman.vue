@@ -106,7 +106,7 @@
         if(self.qibaoData['PT_1201A'].length > 0){
           let shishiData = []
           for(let i=0;i<self.qibaoData['PT_1201A'].length;i++){
-            shishiData.push(self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2
+            shishiData.push((self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2)
           }
 
           var myChart = echarts.init(document.getElementById('qibaoyali'));
@@ -142,6 +142,8 @@
             yAxis: {
               type: 'value',
               name: 'MPa',
+              min: 1,
+              max: 2.5
             },
             series: [{
               name: '实时值',
@@ -168,7 +170,7 @@
         if(self.chukouData['PT_3001'].length > 0){
           let shishiData = []
           for(let i=0;i<self.chukouData['PT_3001'].length;i++){
-            shishiData.push(self.chukouData['PT_3001'][i] + self.chukouData['PT_3002'][i]) / 2
+            shishiData.push((self.chukouData['PT_3001'][i] + self.chukouData['PT_3002'][i]) / 2)
           }
 
           var myChart = echarts.init(document.getElementById('chukouyali'));
@@ -204,6 +206,8 @@
             yAxis: {
               type: 'value',
               name: 'MPa',
+              min: 0.7,
+              max: 1
             },
             series: [{
               name: '实时值',
@@ -322,7 +326,7 @@
                 }
 
                 //消费趋势分组
-                if(i.includes('flow_')){
+                if(i.includes('flow_') && !i.includes('去高新区总表')){
                   let name = i.split('_').pop()
                   if(!self.qushiObj[name]) {
                     self.qushiObj[name] = [item._source[i]]
