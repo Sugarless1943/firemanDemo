@@ -21,6 +21,9 @@
           <el-table-column
             prop="predict"
             label="校准值">
+            <template slot-scope="scope">
+              <predict :row="scope.row"></predict>
+            </template>
           </el-table-column>
         </el-table>
       </template>
@@ -31,61 +34,63 @@
 <script>
     import echarts from 'echarts'
     import moment from 'moment'
+    import predict from './predict'
 
     export default {
     name: 'fireman',
+    components: { predict },
     data () {
       return {
         tableData: [
           {
             name: '给粉机1',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '给粉机2',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '给粉机3',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '给粉机4',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '给粉机5',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '给粉机6',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '给粉机7',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '给粉机8',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '二次风机',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           },
           {
             name: '煤粉消耗',
-            realtime: '-',
-            predict: '-'
+            realtime: 0,
+            predict: 0
           }
         ],
 
@@ -416,42 +421,22 @@
             })
 
             //预测值
-            //   fetch("/predict?minute=-1",{
-            //     method:"get"
-            //   }).then((response) => response.json())
-            //     .then((json) => {
-            //       self.predictData = json.hits.hits[0]._source
-            //
-            //       const data = json.hits.hits[0]._source
-            //       self.tableData[0].predict = data['SK_1503']
-            //       self.tableData[1].predict = data['SK_1504']
-            //       self.tableData[2].predict = data['SK_1505']
-            //       self.tableData[3].predict = data['SK_1506']
-            //       self.tableData[4].predict = data['SK_1507']
-            //       self.tableData[5].predict = data['SK_1508']
-            //       self.tableData[6].predict = data['SK_1509']
-            //       self.tableData[7].predict = data['SK_1510']
-            //       self.tableData[8].predict = data['SK_1502']
-            //
-            //       self.init()
-            //     })
-
-            //预测值
             fetch("/predict?minute=-30",{
               method:"get"
             }).then((response) => response.json())
               .then((json) => {
                 const data = [...json.hits.hits].pop()._source
                 self.predictData = data
-                self.tableData[0].predict = data['SK_1503']
-                self.tableData[1].predict = data['SK_1504']
-                self.tableData[2].predict = data['SK_1505']
-                self.tableData[3].predict = data['SK_1506']
-                self.tableData[4].predict = data['SK_1507']
-                self.tableData[5].predict = data['SK_1508']
-                self.tableData[6].predict = data['SK_1509']
-                self.tableData[7].predict = data['SK_1510']
-                self.tableData[8].predict = data['SK_1502']
+                self.tableData[0].predict = data['SK_1503'] || 0
+                self.tableData[1].predict = data['SK_1504'] || 0
+                self.tableData[2].predict = data['SK_1505'] || 0
+                self.tableData[3].predict = data['SK_1506'] || 0
+                self.tableData[4].predict = data['SK_1507'] || 0
+                self.tableData[5].predict = data['SK_1508'] || 0
+                self.tableData[6].predict = data['SK_1509'] || 0
+                self.tableData[7].predict = data['SK_1510'] || 0
+                self.tableData[8].predict = data['SK_1502'] || 0
+                self.tableData[9].predict = data['coals2'] || 0
 
                 self.qibaoPredict = [null]
                 self.chukouPredict = [null]
@@ -475,15 +460,16 @@
         }).then((response) => response.json())
           .then((json) => {
           const data = json.hits.hits[0]._source
-          self.tableData[0].realtime = data['SK_1503']
-          self.tableData[1].realtime = data['SK_1504']
-          self.tableData[2].realtime = data['SK_1505']
-          self.tableData[3].realtime = data['SK_1506']
-          self.tableData[4].realtime = data['SK_1507']
-          self.tableData[5].realtime = data['SK_1508']
-          self.tableData[6].realtime = data['SK_1509']
-          self.tableData[7].realtime = data['SK_1510']
-          self.tableData[8].realtime = data['SK_1502']
+          self.tableData[0].realtime = data['SK_1503'] || 0
+          self.tableData[1].realtime = data['SK_1504'] || 0
+          self.tableData[2].realtime = data['SK_1505'] || 0
+          self.tableData[3].realtime = data['SK_1506'] || 0
+          self.tableData[4].realtime = data['SK_1507'] || 0
+          self.tableData[5].realtime = data['SK_1508'] || 0
+          self.tableData[6].realtime = data['SK_1509'] || 0
+          self.tableData[7].realtime = data['SK_1510'] || 0
+          self.tableData[8].realtime = data['SK_1502'] || 0
+          self.tableData[9].realtime = data['coals1'] || 0
         })
       },
 
@@ -531,6 +517,6 @@
   }
 
   .el-table td, .el-table th {
-    padding: 7px 0;
+    padding: 6px 0;
   }
 </style>

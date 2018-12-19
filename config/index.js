@@ -11,11 +11,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/predict': {
-        target: 'http://10.0.0.234:10001',
-        changeOrigin: true
-      },
-      '/data': {
+      '/**': {
         target: 'http://10.0.0.234:10001',
         changeOrigin: true
       }
