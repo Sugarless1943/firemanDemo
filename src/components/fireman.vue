@@ -19,7 +19,7 @@
             label="反馈频率">
           </el-table-column>
           <el-table-column
-            prop="change"
+            prop="predict"
             label="校准值">
           </el-table-column>
         </el-table>
@@ -40,47 +40,47 @@
           {
             name: '给粉机1',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '给粉机2',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '给粉机3',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '给粉机4',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '给粉机5',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '给粉机6',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '给粉机7',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '给粉机8',
             realtime: '-',
-            change: '-'
+            predict: '-'
           },
           {
             name: '二次风机',
             realtime: '-',
-            change: '-'
+            predict: '-'
           }
         ],
 
@@ -142,8 +142,7 @@
             yAxis: {
               type: 'value',
               name: 'MPa',
-              min: 1,
-              max: 3
+              scale: true
             },
             series: [{
               name: '实时值',
@@ -206,8 +205,7 @@
             yAxis: {
               type: 'value',
               name: 'MPa',
-              min: 0.7,
-              max: 1
+              scale: true
             },
             series: [{
               name: '实时值',
@@ -227,9 +225,6 @@
           // 使用刚指定的配置项和数据显示图表。
           myChart.setOption(option);
         }
-
-
-
       },
 
       qushi() {
@@ -292,7 +287,7 @@
       realtimeServer() {
         const self = this
 
-        fetch("/dataall",{
+        fetch("/data?minute=-30",{
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
@@ -342,7 +337,8 @@
 
       nowServer() {
         const self = this
-        fetch("/datanow",{
+        //实时值
+        fetch("/data?minute=-1",{
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
@@ -357,6 +353,24 @@
           self.tableData[7].realtime = data['SK_1510']
           self.tableData[8].realtime = data['SK_1502']
         })
+
+        //预测值
+        fetch("/predict?minute=-1",{
+          method:"get"
+        }).then((response) => response.json())
+          .then((json) => {
+            console.log(json)
+            const data = json.hits.hits[0]._source
+            self.tableData[0].predict = data['SK_1503']
+            self.tableData[1].predict = data['SK_1504']
+            self.tableData[2].predict = data['SK_1505']
+            self.tableData[3].predict = data['SK_1506']
+            self.tableData[4].predict = data['SK_1507']
+            self.tableData[5].predict = data['SK_1508']
+            self.tableData[6].predict = data['SK_1509']
+            self.tableData[7].predict = data['SK_1510']
+            self.tableData[8].predict = data['SK_1502']
+          })
 
       },
 
