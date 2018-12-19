@@ -133,7 +133,7 @@
           var myChart = echarts.init(document.getElementById('qibaoyali'));
           // 指定图表的配置项和数据
           var option = {
-            color: ['#157DE2', '#50E3C2', '#F00'],
+            color: ['#157DE2', '#50E3C2', '#FAAD14'],
             title: {
               text: '汽包压力',
               x: 'center'
@@ -164,7 +164,10 @@
             yAxis: {
               type: 'value',
               name: 'MPa',
-              scale: true
+              // scale: true
+              min: 1,
+              max: 3,
+              splitNumber: 4
             },
             series: [{
               name: '实时值',
@@ -213,7 +216,7 @@
           var myChart = echarts.init(document.getElementById('chukouyali'));
           // 指定图表的配置项和数据
           var option = {
-            color: ['#157DE2', '#50E3C2', '#F00'],
+            color: ['#157DE2', '#50E3C2', '#FAAD14'],
             title: {
               text: '出口压力',
               x: 'center'
@@ -244,7 +247,10 @@
             yAxis: {
               type: 'value',
               name: 'MPa',
-              scale: true
+              // scale: true
+              min: 0.8,
+              max: 1,
+              splitNumber: 4
             },
             series: [{
               name: '实时值',
