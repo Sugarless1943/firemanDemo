@@ -12,11 +12,13 @@
           style="width: 100%">
           <el-table-column
             prop="name"
-            label="设备">
+            label="设备"
+            width="150">
           </el-table-column>
           <el-table-column
             prop="realtime"
-            label="反馈频率">
+            label="反馈频率"
+            width="150">
           </el-table-column>
           <el-table-column
             prop="predict"
