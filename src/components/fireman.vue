@@ -81,6 +81,11 @@
             name: '二次风机',
             realtime: '-',
             predict: '-'
+          },
+          {
+            name: '煤粉消耗',
+            realtime: '-',
+            predict: '-'
           }
         ],
 
@@ -92,11 +97,13 @@
           'PT_1201A': [],
           'PT_1201B': []
         },
+        qibaoPredict: [],
 
         chukouData: {
           'PT_3001': [],
           'PT_3002': []
         },
+        chukouPredict: [],
 
         qushiObj: {},
         predictData: {}
@@ -109,7 +116,7 @@
         const final = moment(this.finalTime)
         let times = []
         for(let i=0;i<10;i++) {
-          times.push(final.add(i+1,'m').format('HH:mm'))
+          times.push(final.add(1,'m').format('HH:mm'))
         }
         return [...arr].concat(times)
       },
@@ -138,19 +145,18 @@
       qibaoyali() {
         const self = this
         if(self.qibaoData['PT_1201A'].length > 0){
-          let [shishiData,yuce1,yuce2] = [[],[],[]]
+          let [shishiData,yuce1,yuce2] = [[],self.qibaoPredict,[]]
           for(let i=0;i<self.qibaoData['PT_1201A'].length;i++){
             shishiData.push((self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2)
-            yuce1.push(null)
             yuce2.push(null)
           }
+
           let lastData = (self.finalData['PT_1201A'] + self.finalData['PT_1201B']) / 2
-          yuce1[yuce1.length - 1] = lastData
+          // yuce1[yuce1.length - 1] = lastData
           yuce2[yuce2.length - 1] = lastData
 
-          yuce1 = yuce1.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
+          yuce1 = self.qibaoPredict.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.drum_pressure21,null,null,null,self.predictData.drum_pressure22,null,null,null,null,self.predictData.drum_pressure23]))
-
 
           var myChart = echarts.init(document.getElementById('qibaoyali'));
           // 指定图表的配置项和数据
@@ -222,15 +228,14 @@
       chukouyali() {
         const self = this
         if(self.chukouData['PT_3001'].length > 0){
-          let [shishiData,yuce1,yuce2] = [[],[],[]]
+          let [shishiData,yuce1,yuce2] = [[],self.chukouPredict,[]]
           for(let i=0;i<self.chukouData['PT_3001'].length;i++){
             shishiData.push((self.chukouData['PT_3001'][i] + self.chukouData['PT_3002'][i]) / 2)
-            yuce1.push(null)
             yuce2.push(null)
           }
 
           let lastData = (self.finalData['PT_3001'] + self.finalData['PT_3002']) / 2
-          yuce1[yuce1.length - 1] = lastData
+          // yuce1[yuce1.length - 1] = lastData
           yuce2[yuce2.length - 1] = lastData
           yuce1 = yuce1.concat(self.dataAdd([self.predictData.steam_pressure11,null,null,null,self.predictData.steam_pressure12,null,null,null,null,self.predictData.steam_pressure13]))
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.steam_pressure21,null,null,null,self.predictData.steam_pressure22,null,null,null,null,self.predictData.steam_pressure23]))
@@ -411,25 +416,53 @@
             })
 
             //预测值
-              fetch("/predict?minute=-1",{
-                method:"get"
-              }).then((response) => response.json())
-                .then((json) => {
-                  self.predictData = json.hits.hits[0]._source
+            //   fetch("/predict?minute=-1",{
+            //     method:"get"
+            //   }).then((response) => response.json())
+            //     .then((json) => {
+            //       self.predictData = json.hits.hits[0]._source
+            //
+            //       const data = json.hits.hits[0]._source
+            //       self.tableData[0].predict = data['SK_1503']
+            //       self.tableData[1].predict = data['SK_1504']
+            //       self.tableData[2].predict = data['SK_1505']
+            //       self.tableData[3].predict = data['SK_1506']
+            //       self.tableData[4].predict = data['SK_1507']
+            //       self.tableData[5].predict = data['SK_1508']
+            //       self.tableData[6].predict = data['SK_1509']
+            //       self.tableData[7].predict = data['SK_1510']
+            //       self.tableData[8].predict = data['SK_1502']
+            //
+            //       self.init()
+            //     })
 
-                  const data = json.hits.hits[0]._source
-                  self.tableData[0].predict = data['SK_1503']
-                  self.tableData[1].predict = data['SK_1504']
-                  self.tableData[2].predict = data['SK_1505']
-                  self.tableData[3].predict = data['SK_1506']
-                  self.tableData[4].predict = data['SK_1507']
-                  self.tableData[5].predict = data['SK_1508']
-                  self.tableData[6].predict = data['SK_1509']
-                  self.tableData[7].predict = data['SK_1510']
-                  self.tableData[8].predict = data['SK_1502']
+            //预测值
+            fetch("/predict?minute=-30",{
+              method:"get"
+            }).then((response) => response.json())
+              .then((json) => {
+                const data = [...json.hits.hits].pop()._source
+                self.predictData = data
+                self.tableData[0].predict = data['SK_1503']
+                self.tableData[1].predict = data['SK_1504']
+                self.tableData[2].predict = data['SK_1505']
+                self.tableData[3].predict = data['SK_1506']
+                self.tableData[4].predict = data['SK_1507']
+                self.tableData[5].predict = data['SK_1508']
+                self.tableData[6].predict = data['SK_1509']
+                self.tableData[7].predict = data['SK_1510']
+                self.tableData[8].predict = data['SK_1502']
 
-                  self.init()
+                self.qibaoPredict = [null]
+                self.chukouPredict = [null]
+                json.hits.hits.forEach(item => {
+                  self.qibaoPredict.push(item._source['drum_pressure11'])
+                  self.chukouPredict.push(item._source['steam_pressure11'])
                 })
+                self.qibaoPredict.pop()
+                self.chukouPredict.pop()
+                self.init()
+              })
 
         })
       },
@@ -498,6 +531,6 @@
   }
 
   .el-table td, .el-table th {
-    padding: 9px 0;
+    padding: 7px 0;
   }
 </style>
