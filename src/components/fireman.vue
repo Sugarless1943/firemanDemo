@@ -85,6 +85,8 @@
         ],
 
         times: [],
+        finalTime: '',
+        finalData: {},
 
         qibaoData: {
           'PT_1201A': [],
@@ -96,23 +98,42 @@
           'PT_3002': []
         },
 
-        qushiObj: {}
+        qushiObj: {},
+        predictData: {}
       }
     },
 
     methods: {
+
+      timeAdd(arr) {
+        const final = moment(this.finalTime)
+        let times = [...arr]
+        times.push(final.add(1,'m').format('HH:mm'))
+        times.push(final.add(5,'m').format('HH:mm'))
+        times.push(final.add(10,'m').format('HH:mm'))
+        return times
+      },
+
       qibaoyali() {
         const self = this
         if(self.qibaoData['PT_1201A'].length > 0){
-          let shishiData = []
+          let [shishiData,yuce1,yuce2] = [[],[],[]]
           for(let i=0;i<self.qibaoData['PT_1201A'].length;i++){
             shishiData.push((self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2)
+            yuce1.push(null)
+            yuce2.push(null)
           }
+          let lastData = (self.finalData['PT_1201A'] + self.finalData['PT_1201B']) / 2
+          yuce1[yuce1.length - 1] = lastData
+          yuce2[yuce2.length - 1] = lastData
+          yuce1 = yuce1.concat([self.predictData.drum_pressure11,self.predictData.drum_pressure12,self.predictData.drum_pressure13])
+          yuce2 = yuce2.concat([self.predictData.drum_pressure21,self.predictData.drum_pressure22,self.predictData.drum_pressure23])
+
 
           var myChart = echarts.init(document.getElementById('qibaoyali'));
           // 指定图表的配置项和数据
           var option = {
-            color: ['#157DE2', '#50E3C2'],
+            color: ['#157DE2', '#50E3C2', '#F00'],
             title: {
               text: '汽包压力',
               x: 'center'
@@ -122,7 +143,7 @@
               //formatter: "{b} <br> 合格率: {c}%"
             },
             legend: {
-              data: ['实时值', '预测值'],
+              data: ['实时值', '预测值', '校准值'],
               x: 'center',
               y: 'bottom'
             },
@@ -137,7 +158,8 @@
               type: 'category',
               name: '时间',
               boundaryGap: false,
-              data: self.times
+              data: self.timeAdd(self.times)
+              // data: self.times
             },
             yAxis: {
               type: 'value',
@@ -149,14 +171,22 @@
               type: 'line',
               data: shishiData
             },
-              // {
-              //   name: '预测值',
-              //   type: 'line',
-              //   lineStyle:{
-              //     normal:{type:'dashed'}
-              //   },
-              //   data: [130, 155, 55, 124, 70, 70, 230, 210]
-              // }
+              {
+                name: '预测值',
+                type: 'line',
+                lineStyle:{
+                  normal:{type:'dashed'}
+                },
+                data: yuce1
+              },
+              {
+                name: '校准值',
+                type: 'line',
+                lineStyle:{
+                  normal:{type:'dashed'}
+                },
+                data: yuce2
+              }
             ]
           };
           // 使用刚指定的配置项和数据显示图表。
@@ -167,15 +197,23 @@
       chukouyali() {
         const self = this
         if(self.chukouData['PT_3001'].length > 0){
-          let shishiData = []
+          let [shishiData,yuce1,yuce2] = [[],[],[]]
           for(let i=0;i<self.chukouData['PT_3001'].length;i++){
             shishiData.push((self.chukouData['PT_3001'][i] + self.chukouData['PT_3002'][i]) / 2)
+            yuce1.push(null)
+            yuce2.push(null)
           }
+
+          let lastData = (self.finalData['PT_3001'] + self.finalData['PT_3002']) / 2
+          yuce1[yuce1.length - 1] = lastData
+          yuce2[yuce2.length - 1] = lastData
+          yuce1 = yuce1.concat([self.predictData.steam_pressure11,self.predictData.steam_pressure12,self.predictData.steam_pressure13])
+          yuce2 = yuce2.concat([self.predictData.steam_pressure21,self.predictData.steam_pressure22,self.predictData.steam_pressure23])
 
           var myChart = echarts.init(document.getElementById('chukouyali'));
           // 指定图表的配置项和数据
           var option = {
-            color: ['#157DE2', '#50E3C2'],
+            color: ['#157DE2', '#50E3C2', '#F00'],
             title: {
               text: '出口压力',
               x: 'center'
@@ -185,7 +223,7 @@
               //formatter: "{b} <br> 合格率: {c}%"
             },
             legend: {
-              data: ['实时值', '预测值'],
+              data: ['实时值', '预测值', '校准值'],
               x: 'center',
               y: 'bottom'
             },
@@ -200,7 +238,8 @@
               type: 'category',
               name: '时间',
               boundaryGap: false,
-              data: self.times
+              data: self.timeAdd(self.times)
+              // data: self.times
             },
             yAxis: {
               type: 'value',
@@ -212,14 +251,22 @@
               type: 'line',
               data: shishiData
             },
-              // {
-              //   name: '预测值',
-              //   type: 'line',
-              //   lineStyle:{
-              //     normal:{type:'dashed'}
-              //   },
-              //   data: [120, 132, 101, 134, 90, 70, 230, 210]
-              // }
+              {
+                name: '预测值',
+                type: 'line',
+                lineStyle:{
+                  normal:{type:'dashed'}
+                },
+                data: yuce1
+              },
+              {
+                name: '校准值',
+                type: 'line',
+                lineStyle:{
+                  normal:{type:'dashed'}
+                },
+                data: yuce2
+              }
             ]
           };
           // 使用刚指定的配置项和数据显示图表。
@@ -293,6 +340,9 @@
           .then((json) => {
             const data = json.hits.hits.sort((a,b) => Number(a._id) - Number(b._id))
             self.times = []
+            let finalData = [...data].pop()
+            self.finalTime = finalData._id - 0
+            self.finalData = finalData._source
             self.qibaoData['PT_1201A'] = []
             self.qibaoData['PT_1201B'] = []
             self.chukouData['PT_3001'] = []
@@ -331,7 +381,28 @@
                 }
               }
             })
-            self.init()
+
+            //预测值
+              fetch("/predict?minute=-1",{
+                method:"get"
+              }).then((response) => response.json())
+                .then((json) => {
+                  self.predictData = json.hits.hits[0]._source
+
+                  const data = json.hits.hits[0]._source
+                  self.tableData[0].predict = data['SK_1503']
+                  self.tableData[1].predict = data['SK_1504']
+                  self.tableData[2].predict = data['SK_1505']
+                  self.tableData[3].predict = data['SK_1506']
+                  self.tableData[4].predict = data['SK_1507']
+                  self.tableData[5].predict = data['SK_1508']
+                  self.tableData[6].predict = data['SK_1509']
+                  self.tableData[7].predict = data['SK_1510']
+                  self.tableData[8].predict = data['SK_1502']
+
+                  self.init()
+                })
+
         })
       },
 
@@ -353,25 +424,6 @@
           self.tableData[7].realtime = data['SK_1510']
           self.tableData[8].realtime = data['SK_1502']
         })
-
-        //预测值
-        fetch("/predict?minute=-1",{
-          method:"get"
-        }).then((response) => response.json())
-          .then((json) => {
-            console.log(json)
-            const data = json.hits.hits[0]._source
-            self.tableData[0].predict = data['SK_1503']
-            self.tableData[1].predict = data['SK_1504']
-            self.tableData[2].predict = data['SK_1505']
-            self.tableData[3].predict = data['SK_1506']
-            self.tableData[4].predict = data['SK_1507']
-            self.tableData[5].predict = data['SK_1508']
-            self.tableData[6].predict = data['SK_1509']
-            self.tableData[7].predict = data['SK_1510']
-            self.tableData[8].predict = data['SK_1502']
-          })
-
       },
 
       init() {
