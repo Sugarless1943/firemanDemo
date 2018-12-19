@@ -24,7 +24,7 @@
             prop="predict"
             label="校准值">
             <template slot-scope="scope">
-              <predict :row="scope.row"></predict>
+              <predict :row="scope.row" :ref="'pre'+scope.row.name"></predict>
             </template>
           </el-table-column>
         </el-table>
@@ -448,6 +448,10 @@
                 })
                 self.qibaoPredict.pop()
                 self.chukouPredict.pop()
+
+                for(let i in self.$refs) {
+                  self.$refs[i].forSymbol()
+                }
                 self.init()
               })
 
