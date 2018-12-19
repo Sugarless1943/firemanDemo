@@ -107,11 +107,32 @@
 
       timeAdd(arr) {
         const final = moment(this.finalTime)
-        let times = [...arr]
-        times.push(final.add(1,'m').format('HH:mm'))
-        times.push(final.add(5,'m').format('HH:mm'))
-        times.push(final.add(10,'m').format('HH:mm'))
-        return times
+        let times = []
+        for(let i=0;i<10;i++) {
+          times.push(final.add(i+1,'m').format('HH:mm'))
+        }
+        return [...arr].concat(times)
+      },
+
+      dataAdd(arr) {
+        for(let i=0;i<arr.length;i++) {
+          if(arr[i] == null){
+            let [start,end,len] = [arr[i-1],'',0]
+            for(let j=i;j<arr.length;j++) {
+              if(arr[j]){
+                end = arr[j]
+                len = j - i + 1
+                break
+              }
+            }
+
+            for(let k=0;k<len;k++) {
+              arr[i+k] = arr[i-1] + ((end-start)/len)*(k+1)
+            }
+          }
+        }
+
+        return arr
       },
 
       qibaoyali() {
@@ -126,8 +147,9 @@
           let lastData = (self.finalData['PT_1201A'] + self.finalData['PT_1201B']) / 2
           yuce1[yuce1.length - 1] = lastData
           yuce2[yuce2.length - 1] = lastData
-          yuce1 = yuce1.concat([self.predictData.drum_pressure11,self.predictData.drum_pressure12,self.predictData.drum_pressure13])
-          yuce2 = yuce2.concat([self.predictData.drum_pressure21,self.predictData.drum_pressure22,self.predictData.drum_pressure23])
+
+          yuce1 = yuce1.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
+          yuce2 = yuce2.concat(self.dataAdd([self.predictData.drum_pressure21,null,null,null,self.predictData.drum_pressure22,null,null,null,null,self.predictData.drum_pressure23]))
 
 
           var myChart = echarts.init(document.getElementById('qibaoyali'));
@@ -210,8 +232,8 @@
           let lastData = (self.finalData['PT_3001'] + self.finalData['PT_3002']) / 2
           yuce1[yuce1.length - 1] = lastData
           yuce2[yuce2.length - 1] = lastData
-          yuce1 = yuce1.concat([self.predictData.steam_pressure11,self.predictData.steam_pressure12,self.predictData.steam_pressure13])
-          yuce2 = yuce2.concat([self.predictData.steam_pressure21,self.predictData.steam_pressure22,self.predictData.steam_pressure23])
+          yuce1 = yuce1.concat(self.dataAdd([self.predictData.steam_pressure11,null,null,null,self.predictData.steam_pressure12,null,null,null,null,self.predictData.steam_pressure13]))
+          yuce2 = yuce2.concat(self.dataAdd([self.predictData.steam_pressure21,null,null,null,self.predictData.steam_pressure22,null,null,null,null,self.predictData.steam_pressure23]))
 
           var myChart = echarts.init(document.getElementById('chukouyali'));
           // 指定图表的配置项和数据
