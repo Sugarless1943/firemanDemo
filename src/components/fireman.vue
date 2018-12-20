@@ -96,6 +96,7 @@
           }
         ],
 
+        ids: [],
         times: [],
         finalTime: '',
         finalData: {},
@@ -380,6 +381,7 @@
           .then((json) => {
             const data = json.hits.hits.sort((a,b) => Number(a._id) - Number(b._id))
             self.times = []
+            self.ids = []
             let finalData = [...data].pop()
             self.finalTime = finalData._id - 0
             self.finalData = finalData._source
@@ -392,6 +394,8 @@
             data.forEach(item => {
               //处理时间
               self.times.push(moment(item._id - 0).format('HH:mm'))
+              //处理ID
+              self.ids.push(item._id)
 
               for(let i in item._source) {
                 //汽包压力
@@ -429,22 +433,28 @@
               .then((json) => {
                 const data = [...json.hits.hits].sort((a,b) => Number(a._id) - Number(b._id))
                 self.predictData = data.pop()._source
-                self.tableData[0].predict = data['SK_1503'] || 0
-                self.tableData[1].predict = data['SK_1504'] || 0
-                self.tableData[2].predict = data['SK_1505'] || 0
-                self.tableData[3].predict = data['SK_1506'] || 0
-                self.tableData[4].predict = data['SK_1507'] || 0
-                self.tableData[5].predict = data['SK_1508'] || 0
-                self.tableData[6].predict = data['SK_1509'] || 0
-                self.tableData[7].predict = data['SK_1510'] || 0
-                self.tableData[8].predict = data['SK_1502'] || 0
-                self.tableData[9].predict = data['coals2'] || 0
+                self.tableData[0].predict = self.predictData['SK_1503'] || 0
+                self.tableData[1].predict = self.predictData['SK_1504'] || 0
+                self.tableData[2].predict = self.predictData['SK_1505'] || 0
+                self.tableData[3].predict = self.predictData['SK_1506'] || 0
+                self.tableData[4].predict = self.predictData['SK_1507'] || 0
+                self.tableData[5].predict = self.predictData['SK_1508'] || 0
+                self.tableData[6].predict = self.predictData['SK_1509'] || 0
+                self.tableData[7].predict = self.predictData['SK_1510'] || 0
+                self.tableData[8].predict = self.predictData['SK_1502'] || 0
+                self.tableData[9].predict = self.predictData['coals2'] || 0
 
+                //需要一个null展位，元素是预测1min后的
                 self.qibaoPredict = [null]
                 self.chukouPredict = [null]
                 data.forEach(item => {
-                  self.qibaoPredict.push(item._source['drum_pressure11'])
-                  self.chukouPredict.push(item._source['steam_pressure11'])
+                  if(self.ids.includes(item._id)){
+                    self.qibaoPredict.push(item._source['drum_pressure11'])
+                    self.chukouPredict.push(item._source['steam_pressure11'])
+                  }else {
+                    self.qibaoPredict.push(null)
+                    self.chukouPredict.push(null)
+                  }
                 })
 
                 for(let i in self.$refs) {
