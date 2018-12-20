@@ -50,7 +50,7 @@
         forSymbol() {
           const flag = this.row.realtime >= this.row.predict
           this.symbols = []
-          if(this.row.realtime && this.row.predict) {
+          if(this.row.realtime && this.row.predict && this.row.name != '煤粉消耗') {
             if(flag) {
               let res = this.num(this.row.realtime - this.row.predict) + ''
               console.log(res,'-')

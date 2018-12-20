@@ -13,12 +13,12 @@
           <el-table-column
             prop="name"
             label="设备"
-            width="150">
+            width="180">
           </el-table-column>
           <el-table-column
             prop="realtime"
             label="反馈频率"
-            width="150">
+            width="180">
           </el-table-column>
           <el-table-column
             prop="predict"
@@ -442,6 +442,7 @@
                 self.tableData[6].predict = self.predictData['SK_1509'] || 0
                 self.tableData[7].predict = self.predictData['SK_1510'] || 0
                 self.tableData[8].predict = self.predictData['SK_1502'] || 0
+                self.tableData[9].realtime = self.predictData['coals1'] || 0
                 self.tableData[9].predict = self.predictData['coals2'] || 0
 
                 //需要一个null展位，元素是预测1min后的
@@ -483,7 +484,6 @@
           self.tableData[6].realtime = data['SK_1509'] || 0
           self.tableData[7].realtime = data['SK_1510'] || 0
           self.tableData[8].realtime = data['SK_1502'] || 0
-          self.tableData[9].realtime = data['coals1'] || 0
         })
       },
 
