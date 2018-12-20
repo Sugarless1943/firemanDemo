@@ -164,6 +164,7 @@
           yuce2[yuce2.length - 1] = lastData
 
           yuce1 = self.qibaoPredict.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
+          console.log(yuce1.length)
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.drum_pressure21,null,null,null,self.predictData.drum_pressure22,null,null,null,null,self.predictData.drum_pressure23]))
 
           var myChart = echarts.init(document.getElementById('qibaoyali'));
@@ -379,6 +380,7 @@
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
+            console.log(json,'shishi')
             const data = json.hits.hits.sort((a,b) => Number(a._id) - Number(b._id))
             self.times = []
             self.ids = []
@@ -431,8 +433,10 @@
               method:"get"
             }).then((response) => response.json())
               .then((json) => {
+                console.log(json,'yuce')
                 const data = [...json.hits.hits].sort((a,b) => Number(a._id) - Number(b._id))
                 self.predictData = data.pop()._source
+                console.log(self.ids.length,self.predictData,'predictData')
                 self.tableData[0].predict = self.predictData['SK_1503'] || 0
                 self.tableData[1].predict = self.predictData['SK_1504'] || 0
                 self.tableData[2].predict = self.predictData['SK_1505'] || 0
@@ -445,18 +449,26 @@
                 self.tableData[9].realtime = self.predictData['coals1'] || 0
                 self.tableData[9].predict = self.predictData['coals2'] || 0
 
+                self.qibaoPredict = []
+                self.chukouPredict = []
                 //需要一个null展位，元素是预测1min后的
-                self.qibaoPredict = [null]
-                self.chukouPredict = [null]
-                data.forEach(item => {
-                  if(self.ids.includes(item._id)){
-                    self.qibaoPredict.push(item._source['drum_pressure11'])
-                    self.chukouPredict.push(item._source['steam_pressure11'])
-                  }else {
-                    self.qibaoPredict.push(null)
-                    self.chukouPredict.push(null)
+                for(let i=0;i<self.ids.length;i++) {
+                  self.qibaoPredict.push(null)
+                  self.chukouPredict.push(null)
+
+                  for(let j=0;j<data.length;j++) {
+                    if(self.ids[i] == data[j]._id) {
+                      self.qibaoPredict[i] = data[j]._source['drum_pressure11']
+                      self.chukouPredict[i] = data[j]._source['steam_pressure11']
+                      break;
+                    }
                   }
-                })
+                }
+
+                self.qibaoPredict.unshift(null)
+                self.chukouPredict.unshift(null)
+
+                console.log(self.qibaoPredict,self.qibaoPredict.length)
 
                 for(let i in self.$refs) {
                   self.$refs[i].forSymbol()

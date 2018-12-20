@@ -53,7 +53,6 @@
           if(this.row.realtime && this.row.predict && this.row.name != '煤粉消耗') {
             if(flag) {
               let res = this.num(this.row.realtime - this.row.predict) + ''
-              console.log(res,'-')
               if(res.includes('.')){
                 res = Math.floor(res - 0)
                 for(let i=0;i<res;i++) {
@@ -69,7 +68,6 @@
 
             }else {
               let res = this.num(this.row.predict - this.row.realtime) + ''
-              console.log(res,'+')
               if(res.includes('.')){
                 res = Math.floor(res - 0)
                 for(let i=0;i<res;i++) {
