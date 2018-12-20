@@ -50,7 +50,7 @@
         forSymbol() {
           const flag = this.row.realtime >= this.row.predict
           this.symbols = []
-          if(this.row.realtime && this.num(this.row.predict) != 0) {
+          if(this.row.realtime && this.row.predict) {
             if(flag) {
               let res = this.num(this.row.realtime - this.row.predict) + ''
               console.log(res,'-')

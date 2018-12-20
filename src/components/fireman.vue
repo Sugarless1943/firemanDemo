@@ -374,7 +374,7 @@
       realtimeServer() {
         const self = this
 
-        fetch("/data?minute=-30",{
+        fetch("/data?minute=-50",{
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
@@ -423,12 +423,12 @@
             })
 
             //预测值
-            fetch("/predict?minute=-30",{
+            fetch("/predict?minute=-50",{
               method:"get"
             }).then((response) => response.json())
               .then((json) => {
-                const data = [...json.hits.hits].pop()._source
-                self.predictData = data
+                const data = [...json.hits.hits].sort((a,b) => Number(a._id) - Number(b._id))
+                self.predictData = data.pop()._source
                 self.tableData[0].predict = data['SK_1503'] || 0
                 self.tableData[1].predict = data['SK_1504'] || 0
                 self.tableData[2].predict = data['SK_1505'] || 0
@@ -442,12 +442,10 @@
 
                 self.qibaoPredict = [null]
                 self.chukouPredict = [null]
-                json.hits.hits.forEach(item => {
+                data.forEach(item => {
                   self.qibaoPredict.push(item._source['drum_pressure11'])
                   self.chukouPredict.push(item._source['steam_pressure11'])
                 })
-                self.qibaoPredict.pop()
-                self.chukouPredict.pop()
 
                 for(let i in self.$refs) {
                   self.$refs[i].forSymbol()
