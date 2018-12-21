@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import fireman from '@/components/智能司炉'
+import fireman from '@/components/fireman'
 
 Vue.use(Router)
 
