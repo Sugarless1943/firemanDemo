@@ -114,7 +114,11 @@
         chukouPredict: [],
 
         qushiObj: {},
-        predictData: {}
+        predictData: {},
+
+        chart1: {},
+        chart2: {},
+        chart3: {}
       }
     },
 
@@ -159,14 +163,13 @@
             yuce2.push(null)
           }
 
-          let lastData = (self.finalData['PT_1201A'] + self.finalData['PT_1201B']) / 2
-          // yuce1[yuce1.length - 1] = lastData
-          yuce2[yuce2.length - 1] = lastData
+          console.log(yuce1,'yuce1')
 
+          yuce2[yuce2.length - 1] = self.qibaoPredict[self.qibaoPredict.length - 1]
           yuce1 = self.qibaoPredict.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.drum_pressure21,null,null,null,self.predictData.drum_pressure22,null,null,null,null,self.predictData.drum_pressure23]))
 
-          var myChart = echarts.init(document.getElementById('qibaoyali'));
+          self.chart1 = echarts.init(document.getElementById('qibaoyali'));
           // 指定图表的配置项和数据
           var option = {
             color: ['#157DE2', '#50E3C2', '#FAAD14'],
@@ -229,7 +232,7 @@
             ]
           };
           // 使用刚指定的配置项和数据显示图表。
-          myChart.setOption(option);
+          self.chart1.setOption(option);
         }
       },
 
@@ -242,13 +245,11 @@
             yuce2.push(null)
           }
 
-          let lastData = (self.finalData['PT_3001'] + self.finalData['PT_3002']) / 2
-          // yuce1[yuce1.length - 1] = lastData
-          yuce2[yuce2.length - 1] = lastData
+          yuce2[yuce2.length - 1] = self.chukouPredict[self.chukouPredict.length - 1]
           yuce1 = yuce1.concat(self.dataAdd([self.predictData.steam_pressure11,null,null,null,self.predictData.steam_pressure12,null,null,null,null,self.predictData.steam_pressure13]))
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.steam_pressure21,null,null,null,self.predictData.steam_pressure22,null,null,null,null,self.predictData.steam_pressure23]))
 
-          var myChart = echarts.init(document.getElementById('chukouyali'));
+          self.chart2 = echarts.init(document.getElementById('chukouyali'));
           // 指定图表的配置项和数据
           var option = {
             color: ['#157DE2', '#50E3C2', '#FAAD14'],
@@ -311,7 +312,7 @@
             ]
           };
           // 使用刚指定的配置项和数据显示图表。
-          myChart.setOption(option);
+          self.chart2.setOption(option);
         }
       },
 
@@ -330,7 +331,7 @@
             })
           }
 
-          var myChart = echarts.init(document.getElementById('qushi'));
+          self.chart3 = echarts.init(document.getElementById('qushi'));
           var option = {
             // color: ['#D53A35', '#E98F6F', '#6AB0B8', '#334B5C'],
             title: {
@@ -366,7 +367,7 @@
             series: series || []
           };
           // 使用刚指定的配置项和数据显示图表。
-          myChart.setOption(option);
+          self.chart3.setOption(option);
         }
 
 
@@ -501,6 +502,13 @@
         this.qibaoyali()
         this.chukouyali()
         this.qushi()
+
+        const self = this
+        window.onresize = function () {
+          self.chart1.resize();
+          self.chart2.resize();
+          self.chart3.resize();
+        }
       }
     },
 
