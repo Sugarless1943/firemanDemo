@@ -163,8 +163,6 @@
             yuce2.push(null)
           }
 
-          console.log(yuce1,'yuce1')
-
           yuce2[yuce2.length - 1] = self.qibaoPredict[self.qibaoPredict.length - 1]
           yuce1 = self.qibaoPredict.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.drum_pressure21,null,null,null,self.predictData.drum_pressure22,null,null,null,null,self.predictData.drum_pressure23]))
@@ -435,7 +433,7 @@
               .then((json) => {
                 // console.log(json,'yuce')
                 const data = [...json.hits.hits].sort((a,b) => Number(a._id) - Number(b._id))
-                self.predictData = data.pop()._source
+                self.predictData = [...data].pop()._source
                 self.tableData[0].predict = self.predictData['SK_1503'] || 0
                 self.tableData[1].predict = self.predictData['SK_1504'] || 0
                 self.tableData[2].predict = self.predictData['SK_1505'] || 0
@@ -450,7 +448,6 @@
 
                 self.qibaoPredict = []
                 self.chukouPredict = []
-                //需要一个null展位，元素是预测1min后的
                 for(let i=0;i<self.ids.length;i++) {
                   self.qibaoPredict.push(null)
                   self.chukouPredict.push(null)
@@ -463,9 +460,11 @@
                     }
                   }
                 }
-
+                //需要一个null占位，元素是预测1min后的
                 self.qibaoPredict.unshift(null)
                 self.chukouPredict.unshift(null)
+                self.qibaoPredict.pop()
+                self.chukouPredict.pop()
 
                 // console.log(self.qibaoPredict,self.qibaoPredict.length)
 
