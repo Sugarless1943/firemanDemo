@@ -209,22 +209,37 @@
             series: [{
               name: '实时值',
               type: 'line',
-              data: shishiData
+              data: shishiData,
+              showSymbol: false,
+              areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: '#157DE2'
+                  }, {
+                    offset: 1,
+                    color: '#fff'
+                  }])
+                }
+              },
+              lineStyle: {
+                width: 0
+              }
             },
               {
                 name: '预测值',
                 type: 'line',
-                lineStyle:{
-                  normal:{type:'dashed'}
-                },
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
                 data: yuce1
               },
               {
                 name: '校准值',
                 type: 'line',
-                lineStyle:{
-                  normal:{type:'dashed'}
-                },
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
                 data: yuce2
               }
             ]
@@ -289,22 +304,37 @@
             series: [{
               name: '实时值',
               type: 'line',
-              data: shishiData
+              data: shishiData,
+              showSymbol: false,
+              areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: '#157DE2'
+                  }, {
+                    offset: 1,
+                    color: '#fff'
+                  }])
+                }
+              },
+              lineStyle: {
+                width: 0
+              }
             },
               {
                 name: '预测值',
                 type: 'line',
-                lineStyle:{
-                  normal:{type:'dashed'}
-                },
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
                 data: yuce1
               },
               {
                 name: '校准值',
                 type: 'line',
-                lineStyle:{
-                  normal:{type:'dashed'}
-                },
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
                 data: yuce2
               }
             ]
