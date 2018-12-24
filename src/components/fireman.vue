@@ -491,10 +491,10 @@
                   }
                 }
                 //需要一个null占位，元素是预测1min后的
-                self.qibaoPredict.unshift(null)
-                self.chukouPredict.unshift(null)
-                self.qibaoPredict.pop()
-                self.chukouPredict.pop()
+                // self.qibaoPredict.unshift(null)
+                // self.chukouPredict.unshift(null)
+                // self.qibaoPredict.pop()
+                // self.chukouPredict.pop()
 
                 // console.log(self.qibaoPredict,self.qibaoPredict.length)
 
