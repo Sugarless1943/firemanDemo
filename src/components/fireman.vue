@@ -8,17 +8,15 @@
         <el-table
           :data="tableData"
           stripe
-          :row-style="{height: '36px'}"
+          :cell-style="{padding: '6px 0'}"
           style="width: 100%">
           <el-table-column
             prop="name"
-            label="设备"
-            width="180">
+            label="设备">
           </el-table-column>
           <el-table-column
             prop="realtime"
-            label="反馈频率"
-            width="180">
+            label="反馈频率">
           </el-table-column>
           <el-table-column
             prop="predict"
@@ -379,7 +377,7 @@
               left: '5%',
               right: '5%',
               top: '12%',
-              bottom: '12%',
+              bottom: screen.width > 768 ? '12%': '35%',
               containLabel: true
             },
             xAxis: {
@@ -533,10 +531,13 @@
         this.qushi()
 
         const self = this
-        window.onresize = function () {
-          self.chart1.resize();
-          self.chart2.resize();
-          self.chart3.resize();
+
+        if(screen.width > 768) {
+          window.onresize = function () {
+            self.chart1.resize();
+            self.chart2.resize();
+            self.chart3.resize();
+          }
         }
       }
     },
@@ -579,5 +580,14 @@
 
   .el-table td, .el-table th {
     padding: 6px 0;
+  }
+
+  @media (max-width: 768px) {
+    .fireman {
+      &>div {
+        width: 100%;
+        height: 70%;
+      }
+    }
   }
 </style>
