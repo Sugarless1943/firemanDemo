@@ -34,12 +34,12 @@
 </template>
 
 <script>
-    import echarts from 'echarts'
-    import moment from 'moment'
-    import predict from './predict'
+  import echarts from 'echarts'
+  import moment from 'moment'
+  import predict from './predict'
 
-    export default {
-    name: 'fireman',
+  export default {
+    name: 'firemanTest',
     components: { predict },
     data () {
       return {
@@ -106,12 +106,16 @@
           'PT_1201B': []
         },
         qibaoPredict: [],
+        qibao5: [],
+        qibao10: [],
 
         chukouData: {
           'PT_3001': [],
           'PT_3002': []
         },
         chukouPredict: [],
+        chukou5: [],
+        chukou10: [],
 
         qushiObj: {},
         predictData: {},
@@ -170,7 +174,7 @@
           self.chart1 = echarts.init(document.getElementById('qibaoyali'));
           // 指定图表的配置项和数据
           var option = {
-            color: ['#157DE2', '#50E3C2', '#FAAD14'],
+            // color: ['#157DE2', '#50E3C2', '#FAAD14'],
             title: {
               text: '汽包压力',
               x: 'center'
@@ -180,7 +184,7 @@
               //formatter: "{b} <br> 合格率: {c}%"
             },
             legend: {
-              data: ['实时值', '预测值', '校准值'],
+              data: ['实时值', '预测值', '预测5', '预测10', '校准值'],
               x: 'center',
               y: 'bottom'
             },
@@ -241,6 +245,22 @@
                 //   normal:{type:'dashed'}
                 // },
                 data: yuce2
+              },
+              {
+                name: '预测5',
+                type: 'line',
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
+                data: self.qibao5
+              },
+              {
+                name: '预测10',
+                type: 'line',
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
+                data: self.qibao10
               }
             ]
           };
@@ -265,7 +285,7 @@
           self.chart2 = echarts.init(document.getElementById('chukouyali'));
           // 指定图表的配置项和数据
           var option = {
-            color: ['#157DE2', '#50E3C2', '#FAAD14'],
+            // color: ['#157DE2', '#50E3C2', '#FAAD14'],
             title: {
               text: '出口压力',
               x: 'center'
@@ -275,7 +295,7 @@
               //formatter: "{b} <br> 合格率: {c}%"
             },
             legend: {
-              data: ['实时值', '预测值', '校准值'],
+              data: ['实时值', '预测值', '预测5', '预测10', '校准值'],
               x: 'center',
               y: 'bottom'
             },
@@ -336,7 +356,23 @@
                 //   normal:{type:'dashed'}
                 // },
                 data: yuce2
-              }
+              },
+              {
+                name: '预测5',
+                type: 'line',
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
+                data: self.chukou5
+              },
+              {
+                name: '预测10',
+                type: 'line',
+                // lineStyle:{
+                //   normal:{type:'dashed'}
+                // },
+                data: self.chukou10
+              },
             ]
           };
           // 使用刚指定的配置项和数据显示图表。
@@ -478,6 +514,10 @@
 
                 self.qibaoPredict = []
                 self.chukouPredict = []
+
+                self.qibao5 = []
+                self.chukou5 = []
+
                 for(let i=0;i<self.ids.length;i++) {
                   self.qibaoPredict.push(null)
                   self.chukouPredict.push(null)
@@ -486,6 +526,10 @@
                     if(self.ids[i] == data[j]._id) {
                       self.qibaoPredict[i] = data[j]._source['drum_pressure11']
                       self.chukouPredict[i] = data[j]._source['steam_pressure11']
+                      self.qibao5[i] = data[j]._source['drum_pressure12']
+                      self.chukou5[i] = data[j]._source['steam_pressure12']
+                      self.qibao10[i] = data[j]._source['drum_pressure13']
+                      self.chukou10[i] = data[j]._source['steam_pressure13']
                       break;
                     }
                   }
@@ -498,13 +542,32 @@
 
                 // console.log(self.qibaoPredict,self.qibaoPredict.length)
 
+                self.qibao5 = self.arrShift(self.qibao5,4)
+                self.chukou5 = self.arrShift(self.chukou5,4)
+
+                self.qibao10 = self.arrShift(self.qibao10,9)
+                self.chukou10 = self.arrShift(self.chukou10,9)
+
                 for(let i in self.$refs) {
                   self.$refs[i].forSymbol()
                 }
                 self.init()
               })
 
-        })
+          })
+      },
+
+      arrShift(arr,num) {
+        let newArr = []
+        for(let i=0;i<num;i++) {
+          newArr.push(null)
+        }
+        newArr = newArr.concat(arr)
+        // for(let i=0;i<num;i++) {
+        //   newArr.pop()
+        // }
+
+        return newArr
       },
 
       nowServer() {
@@ -514,17 +577,17 @@
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
-          const data = json.hits.hits[0]._source
-          self.tableData[0].realtime = data['SK_1503'] || 0
-          self.tableData[1].realtime = data['SK_1504'] || 0
-          self.tableData[2].realtime = data['SK_1505'] || 0
-          self.tableData[3].realtime = data['SK_1506'] || 0
-          self.tableData[4].realtime = data['SK_1507'] || 0
-          self.tableData[5].realtime = data['SK_1508'] || 0
-          self.tableData[6].realtime = data['SK_1509'] || 0
-          self.tableData[7].realtime = data['SK_1510'] || 0
-          self.tableData[8].realtime = data['SK_1502'] || 0
-        })
+            const data = json.hits.hits[0]._source
+            self.tableData[0].realtime = data['SK_1503'] || 0
+            self.tableData[1].realtime = data['SK_1504'] || 0
+            self.tableData[2].realtime = data['SK_1505'] || 0
+            self.tableData[3].realtime = data['SK_1506'] || 0
+            self.tableData[4].realtime = data['SK_1507'] || 0
+            self.tableData[5].realtime = data['SK_1508'] || 0
+            self.tableData[6].realtime = data['SK_1509'] || 0
+            self.tableData[7].realtime = data['SK_1510'] || 0
+            self.tableData[8].realtime = data['SK_1502'] || 0
+          })
       },
 
       init() {
@@ -554,7 +617,7 @@
       },10000)
     },
 
-}
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
