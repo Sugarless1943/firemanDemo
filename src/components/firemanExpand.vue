@@ -175,7 +175,9 @@
           yAxis: {
             type: 'value',
             name: 'MPa',
-            scale: true
+            // scale: true
+            min: 0,
+            max: 80
           },
           series: [{
             name: '实时值',
