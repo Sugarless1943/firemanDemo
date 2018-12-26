@@ -7,7 +7,8 @@
         style="width: 100%">
         <el-table-column
           prop="name"
-          label="name">
+          label="name"
+          width="220">
         </el-table-column>
         <el-table-column
           :prop="item"
@@ -222,12 +223,12 @@
       tableServer() {
         const self = this
         //表值
-        fetch("/cost/?minute=-200",{
+        fetch("/cost/?minute=-1440",{
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
             const data = json.hits.hits.sort((a,b) => Number(a._id) - Number(b._id))
-            console.log(data,'table')
+            // console.log(data,'table')
             self.tableData = []
             self.tableList = []
             data.forEach(item => {
@@ -239,7 +240,7 @@
                   if(i.includes('agg_') || i.includes('t_') || i.includes('v_')){
                     self.tableData.push({
                       name: i,
-                      [time]: item._source[i]
+                      [time]: item._source[i].toFixed(4)
                     })
                   }
                 }
@@ -247,7 +248,7 @@
                 for(let i in item._source){
                   self.tableData.forEach(tItem => {
                     if(i == tItem.name){
-                      tItem[time] = item._source[i]
+                      tItem[time] = item._source[i].toFixed(4)
                     }
                   })
                 }
@@ -302,8 +303,8 @@
     box-sizing: border-box;
 
     &>div {
-      width: 49%;
-      height: 48.5%;
+      width: 100%;
+      height: 36%;
       background: #fff;
       box-shadow: 5px 5px 5px rgba(0,21,41,.08);
       padding: 5px;
