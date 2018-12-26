@@ -1,8 +1,20 @@
 <template>
   <section class="fireman">
     <div id="qugaoxin"></div>
-    <div>
-
+    <div style="height: auto;">
+      <el-table
+        :data="tableData"
+        style="width: 100%">
+        <el-table-column
+          prop="name"
+          label="name">
+        </el-table-column>
+        <el-table-column
+          :prop="item"
+          :label="item"
+          v-for="item in tableList">
+        </el-table-column>
+      </el-table>
     </div>
   </section>
 </template>
@@ -25,7 +37,8 @@
 
         chart1: {},
 
-        tableData: []
+        tableData: [],
+        tableList: []
       }
     },
 
@@ -95,7 +108,7 @@
               method:"get"
             }).then((response) => response.json())
               .then((json) => {
-                console.log(json,'yuce')
+                // console.log(json,'yuce')
                 const data = [...json.hits.hits].sort((a,b) => Number(a._id) - Number(b._id))
                 data.forEach(item => item._source = self.objNum(item._source))
 
@@ -213,7 +226,34 @@
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
-            console.log(json,'table')
+            const data = json.hits.hits.sort((a,b) => Number(a._id) - Number(b._id))
+            console.log(data,'table')
+            self.tableData = []
+            self.tableList = []
+            data.forEach(item => {
+              const time = moment(item._id - 0).format('HH:mm')
+              self.tableList.push(time)
+
+              if(self.tableData.length == 0){
+                for(let i in item._source){
+                  if(i.includes('agg_') || i.includes('t_') || i.includes('v_')){
+                    self.tableData.push({
+                      name: i,
+                      [time]: item._source[i]
+                    })
+                  }
+                }
+              }else {
+                for(let i in item._source){
+                  self.tableData.forEach(tItem => {
+                    if(i == tItem.name){
+                      tItem[time] = item._source[i]
+                    }
+                  })
+                }
+
+              }
+            })
           })
       },
 
