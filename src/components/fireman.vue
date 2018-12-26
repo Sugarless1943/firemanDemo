@@ -144,7 +144,7 @@
             }
 
             for(let k=0;k<len;k++) {
-              arr[i+k] = arr[i-1] + ((end-start)/len)*(k+1)
+              arr[i+k] = (arr[i-1] + ((end-start)/len)*(k+1)).toFixed(4) - 0
             }
           }
         }
@@ -157,7 +157,7 @@
         if(self.qibaoData['PT_1201A'].length > 0){
           let [shishiData,yuce1,yuce2] = [[],self.qibaoPredict,[]]
           for(let i=0;i<self.qibaoData['PT_1201A'].length;i++){
-            shishiData.push((self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2)
+            shishiData.push(((self.qibaoData['PT_1201A'][i] + self.qibaoData['PT_1201B'][i]) / 2).toFixed(4) - 0)
             yuce2.push(null)
           }
 
@@ -252,7 +252,7 @@
         if(self.chukouData['PT_3001'].length > 0){
           let [shishiData,yuce1,yuce2] = [[],self.chukouPredict,[]]
           for(let i=0;i<self.chukouData['PT_3001'].length;i++){
-            shishiData.push((self.chukouData['PT_3001'][i] + self.chukouData['PT_3002'][i]) / 2)
+            shishiData.push(((self.chukouData['PT_3001'][i] + self.chukouData['PT_3002'][i]) / 2).toFixed(4) - 0)
             yuce2.push(null)
           }
 
@@ -395,8 +395,6 @@
           // 使用刚指定的配置项和数据显示图表。
           self.chart3.setOption(option);
         }
-
-
       },
 
       realtimeServer() {
@@ -408,6 +406,8 @@
           .then((json) => {
             // console.log(json,'shishi')
             const data = json.hits.hits.sort((a,b) => Number(a._id) - Number(b._id))
+            data.forEach(item => item._source = self.objNum(item._source))
+
             self.times = []
             self.ids = []
             let finalData = [...data].pop()
@@ -461,6 +461,8 @@
               .then((json) => {
                 // console.log(json,'yuce')
                 const data = [...json.hits.hits].sort((a,b) => Number(a._id) - Number(b._id))
+                data.forEach(item => item._source = self.objNum(item._source))
+
                 self.predictData = [...data].pop()._source
                 self.tableData[0].predict = self.predictData['SK_1503'] || 0
                 self.tableData[1].predict = self.predictData['SK_1504'] || 0
@@ -512,7 +514,7 @@
           method:"get"
         }).then((response) => response.json())
           .then((json) => {
-          const data = json.hits.hits[0]._source
+          const data = self.objNum(json.hits.hits[0]._source)
           self.tableData[0].realtime = data['SK_1503'] || 0
           self.tableData[1].realtime = data['SK_1504'] || 0
           self.tableData[2].realtime = data['SK_1505'] || 0
@@ -523,6 +525,13 @@
           self.tableData[7].realtime = data['SK_1510'] || 0
           self.tableData[8].realtime = data['SK_1502'] || 0
         })
+      },
+
+      objNum(obj) {
+        for(let i in obj) {
+          if(obj[i] && typeof obj[i] == 'number') obj[i] = obj[i].toFixed(4) - 0
+        }
+        return obj
       },
 
       init() {
