@@ -221,7 +221,7 @@
           },
           yAxis: {
             type: 'value',
-            name: 'MPa',
+            name: 't/h',
             scale: true
             // min: 0,
             // max: 80
@@ -304,7 +304,7 @@
           },
           yAxis: {
             type: 'value',
-            name: 'MPa',
+            name: 'Hz',
             scale: true
             // min: 0,
             // max: 80
