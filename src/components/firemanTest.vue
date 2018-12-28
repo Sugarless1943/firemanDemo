@@ -168,7 +168,7 @@
           }
 
           yuce2[yuce2.length - 1] = self.qibaoPredict[self.qibaoPredict.length - 1]
-          yuce1 = self.qibaoPredict.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
+          // yuce1 = self.qibaoPredict.concat(self.dataAdd([self.predictData.drum_pressure11,null,null,null,self.predictData.drum_pressure12,null,null,null,null,self.predictData.drum_pressure13]))
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.drum_pressure21,null,null,null,self.predictData.drum_pressure22,null,null,null,null,self.predictData.drum_pressure23]))
 
           self.chart1 = echarts.init(document.getElementById('qibaoyali'));
@@ -184,7 +184,7 @@
               //formatter: "{b} <br> 合格率: {c}%"
             },
             legend: {
-              data: ['实时值', '预测值', '预测5', '预测10', '校准值'],
+              data: ['实时值', '预测值', '预测2', '预测3', '校准值'],
               x: 'center',
               y: 'bottom'
             },
@@ -247,7 +247,7 @@
                 data: yuce2
               },
               {
-                name: '预测5',
+                name: '预测2',
                 type: 'line',
                 // lineStyle:{
                 //   normal:{type:'dashed'}
@@ -255,7 +255,7 @@
                 data: self.qibao5
               },
               {
-                name: '预测10',
+                name: '预测3',
                 type: 'line',
                 // lineStyle:{
                 //   normal:{type:'dashed'}
@@ -279,7 +279,7 @@
           }
 
           yuce2[yuce2.length - 1] = self.chukouPredict[self.chukouPredict.length - 1]
-          yuce1 = yuce1.concat(self.dataAdd([self.predictData.steam_pressure11,null,null,null,self.predictData.steam_pressure12,null,null,null,null,self.predictData.steam_pressure13]))
+          // yuce1 = yuce1.concat(self.dataAdd([self.predictData.steam_pressure11,null,null,null,self.predictData.steam_pressure12,null,null,null,null,self.predictData.steam_pressure13]))
           yuce2 = yuce2.concat(self.dataAdd([self.predictData.steam_pressure21,null,null,null,self.predictData.steam_pressure22,null,null,null,null,self.predictData.steam_pressure23]))
 
           self.chart2 = echarts.init(document.getElementById('chukouyali'));
@@ -295,7 +295,7 @@
               //formatter: "{b} <br> 合格率: {c}%"
             },
             legend: {
-              data: ['实时值', '预测值', '预测5', '预测10', '校准值'],
+              data: ['实时值', '预测值', '预测2', '预测3', '校准值'],
               x: 'center',
               y: 'bottom'
             },
@@ -358,7 +358,7 @@
                 data: yuce2
               },
               {
-                name: '预测5',
+                name: '预测2',
                 type: 'line',
                 // lineStyle:{
                 //   normal:{type:'dashed'}
@@ -366,7 +366,7 @@
                 data: self.chukou5
               },
               {
-                name: '预测10',
+                name: '预测3',
                 type: 'line',
                 // lineStyle:{
                 //   normal:{type:'dashed'}
@@ -542,11 +542,14 @@
 
                 // console.log(self.qibaoPredict,self.qibaoPredict.length)
 
-                self.qibao5 = self.arrShift(self.qibao5,4)
-                self.chukou5 = self.arrShift(self.chukou5,4)
+                self.qibaoPredict = self.arrShift(self.qibaoPredict, 1)
+                self.chukouPredict = self.arrShift(self.chukouPredict, 1)
 
-                self.qibao10 = self.arrShift(self.qibao10,9)
-                self.chukou10 = self.arrShift(self.chukou10,9)
+                self.qibao5 = self.arrShift(self.qibao5,2)
+                self.chukou5 = self.arrShift(self.chukou5,2)
+
+                self.qibao10 = self.arrShift(self.qibao10,3)
+                self.chukou10 = self.arrShift(self.chukou10,3)
 
                 for(let i in self.$refs) {
                   self.$refs[i].forSymbol()

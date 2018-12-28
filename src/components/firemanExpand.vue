@@ -166,7 +166,7 @@
 
                 self.qugaoxinPredict = self.arrShift(self.qugaoxinPredict, 1)
                 self.qugaoxinPredict.pop()
-                self.qugaoxinPredict5 = self.arrShift(self.qugaoxinPredict5, 4)
+                self.qugaoxinPredict5 = self.arrShift(self.qugaoxinPredict5, 2)
 
                 self.init()
               })
