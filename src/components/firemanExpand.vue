@@ -47,6 +47,7 @@
         ye6: [],
         ye7: [],
         ye8: [],
+        er: [],
 
         chart1: {},
         chart2: {},
@@ -115,6 +116,7 @@
             self.ye6 = []
             self.ye7 = []
             self.ye8 = []
+            self.er = []
 
             data.forEach(item => {
               //处理时间
@@ -131,6 +133,7 @@
               self.ye6.push(item._source['SK_1508'])
               self.ye7.push(item._source['SK_1509'])
               self.ye8.push(item._source['SK_1510'])
+              self.er.push(item._source['SK_1502'])
             })
 
             // console.log(self.times,self.qugaoxin)
@@ -161,6 +164,8 @@
                   }
                 }
 
+                self.qugaoxinPredict = self.arrShift(self.qugaoxinPredict, 1)
+                self.qugaoxinPredict.pop()
                 self.qugaoxinPredict5 = self.arrShift(self.qugaoxinPredict5, 4)
 
                 self.init()
@@ -284,7 +289,7 @@
             //formatter: "{b} <br> 合格率: {c}%"
           },
           legend: {
-            data: ['给粉机1','给粉机2','给粉机3','给粉机4','给粉机5','给粉机6','给粉机7','给粉机8'],
+            data: ['给粉机1','给粉机2','给粉机3','给粉机4','给粉机5','给粉机6','给粉机7','给粉机8','二次风机'],
             x: 'center',
             y: 'bottom'
           },
@@ -302,13 +307,21 @@
             data: self.times
             // data: self.times
           },
-          yAxis: {
-            type: 'value',
-            name: 'Hz',
-            scale: true
-            // min: 0,
-            // max: 80
-          },
+          yAxis: [
+            {
+              type: 'value',
+              name: 'Hz',
+              scale: true
+              // min: 0,
+              // max: 80
+            },{
+              type: 'value',
+              name: 'Hz',
+              // scale: true,
+              min: 20,
+              max: 60
+            }
+          ],
           series: [
             {
               name: '给粉机1',
@@ -342,6 +355,29 @@
               name: '给粉机8',
               type: 'line',
               data: self.ye8
+            }, {
+              name: '二次风机',
+              type: 'line',
+              data: self.er,
+              yAxisIndex: 1,
+              itemStyle: {
+                normal: {
+
+                  color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                    offset: 0,
+                    color: 'rgba(16,97,204,1)'
+                  }, {
+                    offset: 1,
+                    color: 'rgba(17,235,210,1)'
+                  }])
+                },
+                emphasis: {
+                  color: 'rgb(0,196,132)',
+                  borderColor: 'rgba(0,196,132,0.2)',
+                  extraCssText: 'box-shadow: 8px 8px 8px rgba(0, 0, 0, 1);',
+                  borderWidth: 10
+                }
+              },
             }
           ]
         };
