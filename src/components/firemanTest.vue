@@ -518,6 +518,9 @@
                 self.qibao5 = []
                 self.chukou5 = []
 
+                self.qibao10 = []
+                self.chukou10 = []
+
                 for(let i=0;i<self.ids.length;i++) {
                   self.qibaoPredict.push(null)
                   self.chukouPredict.push(null)
