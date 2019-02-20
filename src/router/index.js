@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import fireman from '@/components/fireman'
 import firemanTest from '@/components/firemanTest'
 import firemanExpand from '@/components/firemanExpand'
+import firemanView from '@/components/firemanView'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/firemanExpand',
       name: 'firemanExpand',
       component: firemanExpand
+    },
+    {
+      path: '/firemanView',
+      name: 'firemanView',
+      component: firemanView
     }
   ]
 })
